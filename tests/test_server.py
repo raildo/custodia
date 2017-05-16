@@ -6,6 +6,7 @@ import socket
 
 import pytest
 
+from custodia.httpd.server import HTTPServer
 from custodia.server.args import parse_args
 from custodia.server.config import parse_config
 
@@ -97,3 +98,11 @@ def test_parse_config_instance(args_instance):
         'tls_verify_client': False,
         'umask': 23
     }
+
+
+def test_create_http_server(args_instance):
+    parser, config = parse_config(args_instance)
+    httpd = HTTPServer(config['server_url'], config)
+    socket = httpd.get_socket()
+    assert HTTPServer == type(httpd)
+    assert 'testing.sock' in socket[1]
